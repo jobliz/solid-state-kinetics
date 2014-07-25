@@ -3,17 +3,22 @@ There's nothing here as of yet.
 """
 
 from __future__ import division
+import math
+import itertools
 import functools
 import numpy as np
 from scipy.constants import R
 from scipy.optimize import minimize
+from scipy.integrate import ode
 
 from ..ti import senumyang
 
 __all__ = [
     'psi',
     'single_isothermal',
-    'single_nonisothermal'
+    'single_nonisothermal',
+    'ni_rates',
+    'ni_integrate'
 ]
 
 def psi(T, alphas, rate, A, Ea, g=None):
@@ -104,3 +109,89 @@ def single_nonisothermal(model, A, E, alphas, rate, T0=500, method="Nelder-Mead"
     objfun = functools.partial(psi, g=model)
     output = [minimize(objfun, T0, args=(a, rate, A, E), method=method) for a in alphas]
     return [o.x for o in output]
+    
+def ni_rates(*args):
+    """
+    Calculates non-isothermal rate constants. Parameter format is
+    [b, T, A1, E1, A2, E2, A3, E3...]
+    
+    Parameters (*args) all int or float
+    ----------------------------------
+    [0]   : Heating rate (b)
+    [1]   : Actual temperature
+    [n]   : Pre-exponential factor
+    [n+1] : Activation Energy
+    
+    Returns
+    -------
+    k : iterable
+        List of rate constants for given isothermal step
+    """
+    
+    b, T, A, E = args[0], args[1], [], []
+    cycle = itertools.cycle([A, E])
+    
+    for arg in args[2:]:
+        cycle.next().append(arg)
+    
+    K = []
+    for n, _ in enumerate(A):
+        K.append(A[n]/b * math.exp(-E[n]/(R*T)))
+        
+    return K
+
+def ni_integrate(func, T0, args=None, dT=1, T1=None, verbose=False):
+    """
+    Integrate a non-isothermal composite kinetic model.
+    
+    Parameters
+    ----------
+    func : callable
+        Model function
+    T0 : int or float
+        Startint temperature (in Kelvins)
+    args : iterable
+        Heating rate followed by A, E pairs.
+    dT : int or float
+        Temperature step size
+    T1 : int or float (optional)
+        Force final simulation temperature to this value.
+    verbose : boolean (optional)
+        Print results from every integration step
+        
+    Returns
+    -------
+    temps : iterable
+        Temperature list.
+    alphas: iterable
+        Transformation fraction list.
+    """
+    
+    n = math.ceil(len(args[2:]) / 2) + 1
+    r = ode(func).set_integrator('zvode', method='bdf', with_jacobian=False)
+    r.set_initial_value(np.zeros(n), T0).set_f_params(*args)
+    temps, alphas = [], []
+    
+    while r.successful():
+        r.integrate(r.t+dT)
+        
+        if verbose:
+            print r.t, r.y
+        
+        # work until alpha == 1
+        if not T1: 
+            if r.y[2] < 1:
+                temps.append(r.t)
+                alphas.append(r.y[2])
+            else:
+                break
+        
+        # work until given last temperature (long graph style)
+        else:      
+            if r.t < T1:
+                temps.append(r.t)
+                alphas.append(r.y[2])
+            else:
+                break
+                
+    return temps, alphas
