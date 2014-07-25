@@ -18,3 +18,9 @@ Emails regarding this topic will be very appreciated. For full disclosure: I'm
 an "information engineering" (fancy name for computer science) student, not a 
 physics or materials science specialist. If you find errors or have suggestions
 pertaining the code, please let me know.
+
+TODO List:
+* Clean code up (parts are messy)
+* Fix multiple isoconversional method implementations.
+* Test nonisothermal simulation code with more examples.
+* Do a proper setup.py for uploading module to PyPi.
