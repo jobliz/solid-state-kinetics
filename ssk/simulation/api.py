@@ -1,5 +1,10 @@
 """
-There's nothing here as of yet.
+Most functions on this submodule straightfoward and independent one of each 
+other.
+
+* single_isothermal depends on psi
+* ni_integrate works with a user-made function that can be simplified by
+  using ni_rates
 """
 
 from __future__ import division
@@ -125,7 +130,7 @@ def ni_rates(*args):
     Returns
     -------
     k : iterable
-        List of rate constants for given isothermal step
+        List of rate constants for given non-isothermal step
     """
     
     b, T, A, E = args[0], args[1], [], []
@@ -182,7 +187,7 @@ def ni_integrate(func, T0, args=None, dT=1, T1=None, verbose=False):
         if not T1: 
             if r.y[n-1] < 1: # last y position should be total transformed fraction
                 temps.append(r.t)
-                alphas.append(r.y[2])
+                alphas.append(r.y[n-1])
             else:
                 break
         
@@ -190,7 +195,7 @@ def ni_integrate(func, T0, args=None, dT=1, T1=None, verbose=False):
         else:      
             if r.t < T1:
                 temps.append(r.t)
-                alphas.append(r.y[2])
+                alphas.append(r.y[n-1])
             else:
                 break
                 
