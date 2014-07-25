@@ -180,7 +180,7 @@ def ni_integrate(func, T0, args=None, dT=1, T1=None, verbose=False):
         
         # work until alpha == 1
         if not T1: 
-            if r.y[2] < 1:
+            if r.y[n-1] < 1: # last y position should be total transformed fraction
                 temps.append(r.t)
                 alphas.append(r.y[2])
             else:
