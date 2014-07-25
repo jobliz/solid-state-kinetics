@@ -12,7 +12,10 @@ work in solid state kinetics. It currently features:
 * Isoconversional analysis methods (Ozawa-Flynn-Wall, Nonlinear (Vyazovkin), etc).
 
 Dependencies are just the python numerical stack (numpy, scipy and matplotlib). 
-The code was developed directly from the formulae on the literature.
+The code was developed directly from the formulae on the literature:
+
+* [Basics and applications of solid-state kinetics: A pharmaceutical perspective](http://onlinelibrary.wiley.com/doi/10.1002/jps.20559/abstract)
+* [ICTAC Kinetics Committee recommendations for performing kinetic computations on thermal analysis data](http://www.sciencedirect.com/science/article/pii/S0040603111002152)
 
 Emails regarding this topic will be very appreciated. For full disclosure: I'm
 an "information engineering" (fancy name for computer science) student, not a 
