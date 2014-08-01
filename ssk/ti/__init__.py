@@ -8,7 +8,7 @@ Relevant literature:
 Review and evaluation of the approximations to the temperature integral.
 http://onlinelibrary.wiley.com/doi/10.1002/aic.11296/abstract
 
-The ‘Temperature Integral’ - Its use and abuse.
+The "Temperature Integral" - Its use and abuse.
 http://www.sciencedirect.com/science/article/pii/S0040603197000464
 """
 

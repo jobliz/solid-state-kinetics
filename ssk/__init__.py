@@ -5,7 +5,7 @@ Submodules:
 
 * ti: The temperature integral itself and some approximations.
     - Senum-Yang
-    - Doyle
+    - Doyle (TODO)
   
 * alpha: Functions for getting transformed fraction values from experimental
   data.
@@ -27,7 +27,11 @@ Submodules:
 
 * simulation: Single-step reaction simulation.
 
+* smoothing: Signal/curve smoothing.
+    - Savitzky-Golay filter (https://gist.github.com/RyanHope/2321077)
+
 * helpers: Miscellaneous functions.
+    - Excel file reading and writing.
 """
 
 # Submodule imports
@@ -35,6 +39,7 @@ import ti
 import alpha
 import models
 import helpers
+import smoothing
 import simulation
 import isoconversional
 
